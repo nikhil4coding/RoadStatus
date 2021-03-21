@@ -1,15 +1,12 @@
 # RoadStatus
 ## How to build the code
-Before building the project, two build variables needs to be changed namely `APP_KEY` and `APP_BASE_URL`.
+Before building the project, please add the following line to your *local.properties*
 
-`APP_KEY` is the variable used for accessing the data using API calls
-`APP_BASE_URL` is the base URL for any APi calls
-These variables are found in *app/build.gradle*
+`APP_KEY=YOUR_APP_KEY`
+  where as
+  `YOUR_APP_KEY` is the *APP Key* provided by TFL to access the APIs
+
 Please Note: The app will not work if correct values are not set for these variables.
-Please replace 
-`APP_KEY` with actual API key
-and 
-`APP_BASE_URL` with actual base API URL (e.g. https://api.tfl.gov.uk)
 
 To *build* the app run the following commands on terminal
 
