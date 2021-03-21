@@ -17,8 +17,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        buildConfigField ("String", "APP_KEY", "\"00982225f03f43e3ab891aeda69c1c91\"")
-        buildConfigField ("String", "APP_BASE_URL", "\"https://api.tfl.gov.uk\"")
+        buildConfigField ("String", "APP_KEY", "\"Add your APP key here\"")
+        buildConfigField ("String", "APP_BASE_URL", "\"Add your App base url here\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
