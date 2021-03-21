@@ -6,7 +6,7 @@ Before building the project, please add the following line to your *local.proper
   where as
   `YOUR_APP_KEY` is the *APP Key* provided by TFL to access the APIs
 
-Please Note: The app will not work if correct values are not set for these variables.
+Please Note: The app will not work if correct value is not set for this variables.
 
 To *build* the app run the following commands on terminal
 
