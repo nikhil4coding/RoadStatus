@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Road Status</string>
+    <string name="enter_a_road_name">Enter a Road Name</string>
+    <string name="get_status">Get Status</string>
+    <string name="road_name">Name: %1$s</string>
+    <string name="severity">Road Status: %1$s</string>
+    <string name="severity_description">Road Status Description: %1$s</string>
+</resources>
