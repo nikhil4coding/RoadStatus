@@ -3,8 +3,8 @@
 Before building the project, please add the following line to your *local.properties*
 
 `APP_KEY=YOUR_APP_KEY`
-  where as
-  `YOUR_APP_KEY` is the *APP Key* provided by TFL to access the APIs
+where as
+`YOUR_APP_KEY` is the *APP Key* provided by TFL to access the APIs
 
 Please Note: The app will not work if correct value is not set for this variables.
 
