@@ -5,7 +5,7 @@ import com.roadstatus.view.model.BoundCoordinate
 import org.junit.Test
 
 internal class RoadStatusSuccessMapperTest {
-    private val sut = RoadStatusSuccessMapper()
+    private val sut = RoadStatusSuccessMapperImpl()
 
     @Test
     fun `GIVEN StatusDTO THEN verify return value has correct values`() {

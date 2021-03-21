@@ -2,14 +2,10 @@ package com.roadstatus.repository
 
 import com.google.gson.Gson
 import com.roadstatus.data.ErrorDTO
-import com.roadstatus.data.StatusDTO
 import com.roadstatus.mapper.RoadStatusErrorMapper
 import com.roadstatus.mapper.RoadStatusSuccessMapper
 import com.roadstatus.network.RoadStatusService
 import com.roadstatus.view.model.RoadStatus
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 class RoadStatusRepositoryImpl @Inject constructor(

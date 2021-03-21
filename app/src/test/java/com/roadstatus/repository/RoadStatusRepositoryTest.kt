@@ -2,8 +2,8 @@ package com.roadstatus.repository
 
 import com.google.gson.Gson
 import com.roadstatus.data.StatusDTO
-import com.roadstatus.mapper.RoadStatusErrorMapper
-import com.roadstatus.mapper.RoadStatusSuccessMapper
+import com.roadstatus.mapper.RoadStatusErrorMapperImpl
+import com.roadstatus.mapper.RoadStatusSuccessMapperImpl
 import com.roadstatus.network.RoadStatusService
 import com.roadstatus.view.model.RoadStatus
 import io.mockk.coEvery
@@ -17,8 +17,8 @@ private const val ROAD_NAME = "ROAD_NAME"
 
 internal class RoadStatusRepositoryTest {
     private val roadStatusService = mockk<RoadStatusService>()
-    private val roadStatusSuccessMapper = mockk<RoadStatusSuccessMapper>()
-    private val roadStatusErrorMapper = mockk<RoadStatusErrorMapper>()
+    private val roadStatusSuccessMapper = mockk<RoadStatusSuccessMapperImpl>()
+    private val roadStatusErrorMapper = mockk<RoadStatusErrorMapperImpl>()
     private val gson = mockk<Gson>()
 
     private val sut = RoadStatusRepositoryImpl(

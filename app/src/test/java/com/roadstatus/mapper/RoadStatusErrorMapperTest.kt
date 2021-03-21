@@ -1,12 +1,11 @@
 package com.roadstatus.mapper
 
 import com.roadstatus.data.ErrorDTO
-import com.roadstatus.view.model.RoadStatus
 import org.junit.Test
 
 internal class RoadStatusErrorMapperTest {
 
-    private val sut = RoadStatusErrorMapper()
+    private val sut = RoadStatusErrorMapperImpl()
 
     @Test
     fun `GIVEN Error DTO THEN verify that the return value has error message`() {
