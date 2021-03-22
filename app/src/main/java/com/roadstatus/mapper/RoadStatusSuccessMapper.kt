@@ -26,7 +26,7 @@ class RoadStatusSuccessMapper @Inject constructor() {
     }
 
     private fun parseBoundCoordinates(statusDTO: StatusDTO, boundCoordinates: MutableList<BoundCoordinate>) {
-        statusDTO.bounds.removePrefix("[[").removeSuffix("]]").split("],[").toTypedArray().map { bound ->
+        statusDTO.bounds.removePrefix("[[").removeSuffix("]]").split("],[").map { bound ->
             val latLong = bound.split(",")
             boundCoordinates.add(BoundCoordinate(latLong.first().toDouble(), latLong.last().toDouble()))
         }
