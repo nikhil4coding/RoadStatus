@@ -1,11 +1,12 @@
 package com.roadstatus.mapper
 
+import com.google.common.truth.Truth.assertThat
 import com.roadstatus.data.ErrorDTO
 import org.junit.Test
 
 internal class RoadStatusErrorMapperTest {
 
-    private val sut = RoadStatusErrorMapperImpl()
+    private val sut = RoadStatusErrorMapper()
 
     @Test
     fun `GIVEN Error DTO THEN verify that the return value has error message`() {
@@ -17,8 +18,8 @@ internal class RoadStatusErrorMapperTest {
             relativeURI = "",
             message = "ERROR"
         )
-        val result = sut.getRoadStatusError(errorDTO)
+        val result = sut.map(errorDTO)
 
-        assert(result.reason == "ERROR")
+        assertThat(result.reason).isEqualTo("ERROR")
     }
 }

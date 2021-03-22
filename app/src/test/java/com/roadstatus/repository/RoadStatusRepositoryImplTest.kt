@@ -1,9 +1,10 @@
 package com.roadstatus.repository
 
+import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
 import com.roadstatus.data.StatusDTO
-import com.roadstatus.mapper.RoadStatusErrorMapperImpl
-import com.roadstatus.mapper.RoadStatusSuccessMapperImpl
+import com.roadstatus.mapper.RoadStatusErrorMapper
+import com.roadstatus.mapper.RoadStatusSuccessMapper
 import com.roadstatus.network.RoadStatusService
 import com.roadstatus.view.model.RoadStatus
 import io.mockk.coEvery
@@ -15,10 +16,10 @@ import retrofit2.Response
 
 private const val ROAD_NAME = "ROAD_NAME"
 
-internal class RoadStatusRepositoryTest {
+internal class RoadStatusRepositoryImplTest {
     private val roadStatusService = mockk<RoadStatusService>()
-    private val roadStatusSuccessMapper = mockk<RoadStatusSuccessMapperImpl>()
-    private val roadStatusErrorMapper = mockk<RoadStatusErrorMapperImpl>()
+    private val roadStatusSuccessMapper = mockk<RoadStatusSuccessMapper>()
+    private val roadStatusErrorMapper = mockk<RoadStatusErrorMapper>()
     private val gson = mockk<Gson>()
 
     private val sut = RoadStatusRepositoryImpl(
@@ -29,7 +30,7 @@ internal class RoadStatusRepositoryTest {
     )
 
     @Test
-    fun `GIVEN name of the road AND if response is successful with non empty list THEN return Success`() = runBlocking {
+    fun `GIVEN name of the road WHEN response is successful with non empty list THEN return Success`() = runBlocking {
         val response = getSuccessfulResponse()
         coEvery { roadStatusService.getRoadStatus(ROAD_NAME) } returns response
 
@@ -39,22 +40,32 @@ internal class RoadStatusRepositoryTest {
             severityDescription = "SEVERITY_DESCRIPTION",
             boundCoordinates = listOf()
         )
-        every { roadStatusSuccessMapper.getRoadStatus(any()) } returns success
+        every { roadStatusSuccessMapper.map(any()) } returns success
 
         val roadStatus = sut.getRoadStatus(ROAD_NAME)
 
-        assert((roadStatus as RoadStatus.Success).roadName == "ROAD_NAME")
-        assert((roadStatus).severity == "SEVERITY")
-        assert((roadStatus).severityDescription == "SEVERITY_DESCRIPTION")
+
+        assertThat((roadStatus as RoadStatus.Success).roadName).isEqualTo("ROAD_NAME")
+        assertThat((roadStatus).severity).isEqualTo("SEVERITY")
+        assertThat((roadStatus).severityDescription).isEqualTo("SEVERITY_DESCRIPTION")
     }
 
     @Test
-    fun `GIVEN name of the road AND if response is successful but null THEN return Error `() = runBlocking {
+    fun `GIVEN name of the road WHEN response is successful but null THEN return Error `() = runBlocking {
         coEvery { roadStatusService.getRoadStatus(ROAD_NAME) } returns Response.success(null)
 
         val roadStatus = sut.getRoadStatus(ROAD_NAME)
 
-        assert((roadStatus as RoadStatus.Error).reason == "No Status received for valid Road Name")
+        assertThat((roadStatus as RoadStatus.Error).reason).isEqualTo("No Status received for valid Road Name")
+    }
+
+    @Test
+    fun `GIVEN name of the road WHEN response is successful but empty THEN return Error `() = runBlocking {
+        coEvery { roadStatusService.getRoadStatus(ROAD_NAME) } returns Response.success(listOf())
+
+        val roadStatus = sut.getRoadStatus(ROAD_NAME)
+
+        assertThat((roadStatus as RoadStatus.Error).reason).isEqualTo("Status received is Empty for road Name: $ROAD_NAME")
     }
 
     private fun getSuccessfulResponse(): Response<List<StatusDTO>> {

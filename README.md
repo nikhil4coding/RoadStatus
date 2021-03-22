@@ -28,7 +28,8 @@ On Mac or Linux: `./gradlew testDebugUnitTest`
 ## Assumptions
 While writing the code following assumptions are made
 - Device will be aways connected to internet
-- App will run on Potrait mode only
+- App will run on Portrait mode only
+- TFL API service is always available
 
 ## Extra
 This code is to demo Clean Architecture using Dagger, Retrofit, coroutines, MVVM pattern and Kotlin in an Android App.

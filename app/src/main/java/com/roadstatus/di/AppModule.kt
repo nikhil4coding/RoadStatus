@@ -3,9 +3,7 @@ package com.roadstatus.di
 import com.google.gson.Gson
 import com.roadstatus.BuildConfig
 import com.roadstatus.mapper.RoadStatusErrorMapper
-import com.roadstatus.mapper.RoadStatusErrorMapperImpl
 import com.roadstatus.mapper.RoadStatusSuccessMapper
-import com.roadstatus.mapper.RoadStatusSuccessMapperImpl
 import com.roadstatus.network.RoadStatusService
 import com.roadstatus.repository.RoadStatusRepository
 import com.roadstatus.repository.RoadStatusRepositoryImpl
@@ -65,10 +63,4 @@ class AppModule {
         roadStatusErrorMapper,
         gson
     )
-
-    @Provides
-    fun provideRoadStatusErrorMapper(): RoadStatusErrorMapper = RoadStatusErrorMapperImpl()
-
-    @Provides
-    fun provideRoadStatusSuccessMapper(): RoadStatusSuccessMapper = RoadStatusSuccessMapperImpl()
 }

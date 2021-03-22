@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.roadstatus.repository.RoadStatusRepository
-import com.roadstatus.repository.RoadStatusRepositoryImpl
 import com.roadstatus.utils.DispatcherProvider
 import com.roadstatus.view.model.RoadStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,51 +19,58 @@ class RoadStatusViewModel @Inject constructor(
     private val roadStatusRepository: RoadStatusRepository
 ) : ViewModel() {
 
-    private val viewStateEmitter = MutableLiveData<ViewState>()
-    private val viewEventsEmitter = MutableLiveData<ViewEvent>(ViewEvent.InProgress(false))
+    private val viewStateEmitter = MutableLiveData<ViewState>(ViewState.Loading(isInProgress = false, isButtonEnabled = false))
     val viewState: LiveData<ViewState> = viewStateEmitter
 
-    val viewEvent: LiveData<ViewEvent> = viewEventsEmitter
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
-        viewStateEmitter.postValue(ViewState.Content.Error(exception.message ?: "Something went Wrong!!"))
+        viewStateEmitter.postValue(
+            ViewState.Error(
+                errorDescription = exception.message ?: "Something went Wrong!!",
+                isInProgress = false,
+                isButtonEnabled = true
+            )
+        )
     }
 
     fun onFetchButtonClicked(roadName: String) {
-        viewEventsEmitter.postValue(ViewEvent.InProgress(true))
+        viewStateEmitter.postValue(ViewState.Loading(isInProgress = true, isButtonEnabled = false))
         viewModelScope.launch {
-            withContext(dispatcher.io() + coroutineExceptionHandler) {
+            val updatedViewState = withContext(dispatcher.io() + coroutineExceptionHandler) {
                 when (val roadStatus = roadStatusRepository.getRoadStatus(roadName)) {
                     is RoadStatus.Success -> {
-                        viewStateEmitter.postValue(
-                            ViewState.Content.Success(
-                                roadStatus = roadStatus
-                            )
+                        ViewState.Content(
+                            roadStatus = roadStatus,
+                            isInProgress = false,
+                            isButtonEnabled = true
                         )
                     }
-                    is RoadStatus.Error -> viewStateEmitter.postValue(
-                        ViewState.Content.Error(
-                            errorDescription = roadStatus.reason
+                    is RoadStatus.Error ->
+                        ViewState.Error(
+                            errorDescription = roadStatus.reason,
+                            isInProgress = false,
+                            isButtonEnabled = true
                         )
-                    )
                 }
-                viewEventsEmitter.postValue(ViewEvent.InProgress(false))
             }
+            viewStateEmitter.postValue(updatedViewState)
         }
+    }
+
+    fun onTextChanged(input: String) {
+        val newLoadingState =
+            if (input.isNotEmpty())
+                ViewState.Loading(isInProgress = false, isButtonEnabled = true)
+            else
+                ViewState.Loading(isInProgress = false, isButtonEnabled = false)
+        viewStateEmitter.postValue(newLoadingState)
     }
 
     sealed class ViewState {
-        sealed class Content : ViewState() {
-            data class Success(
-                val roadStatus: RoadStatus.Success,
-            ) : Content()
+        abstract val isInProgress: Boolean
+        abstract val isButtonEnabled: Boolean
 
-            data class Error(
-                val errorDescription: String,
-            ) : Content()
-        }
-    }
-
-    sealed class ViewEvent {
-        data class InProgress(val showProgress: Boolean) : ViewEvent()
+        data class Loading(override val isInProgress: Boolean, override val isButtonEnabled: Boolean) : ViewState()
+        data class Content(val roadStatus: RoadStatus.Success, override val isInProgress: Boolean, override val isButtonEnabled: Boolean) : ViewState()
+        data class Error(val errorDescription: String, override val isInProgress: Boolean, override val isButtonEnabled: Boolean) : ViewState()
     }
 }

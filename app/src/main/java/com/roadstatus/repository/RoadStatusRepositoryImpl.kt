@@ -20,13 +20,17 @@ class RoadStatusRepositoryImpl @Inject constructor(
         return if (response.isSuccessful) {
             val statusList = response.body()
             statusList?.let {
-                roadStatusSuccessMapper.getRoadStatus(it)
+                if (it.isNotEmpty()) {
+                    roadStatusSuccessMapper.map(it)
+                } else {
+                    RoadStatus.Error("Status received is Empty for road Name: $name")
+                }
             } ?: RoadStatus.Error("No Status received for valid Road Name")
         } else {
             response.errorBody()?.let {
                 val errorDTO = gson.fromJson(it.string(), ErrorDTO::class.java)
-                roadStatusErrorMapper.getRoadStatusError(errorDTO)
-            } ?: RoadStatus.Error("No Error Status received for invalid Road Name")
+                roadStatusErrorMapper.map(errorDTO)
+            } ?: RoadStatus.Error("No Error description received for invalid Road Name")
         }
     }
 }
