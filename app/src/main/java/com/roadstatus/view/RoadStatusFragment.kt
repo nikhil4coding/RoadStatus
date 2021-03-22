@@ -3,54 +3,55 @@ package com.roadstatus.view
 import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.roadstatus.R
 import com.roadstatus.view.model.BoundCoordinate
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_road_status.*
+import kotlinx.android.synthetic.main.fragment_road_status.*
 
 private const val DEFAULT_LAT = 51.509865
 private const val DEFAULT_LNG = -0.118092
 
 @AndroidEntryPoint
-class RoadStatusActivity : AppCompatActivity(), OnMapReadyCallback {
-
+class RoadStatusFragment : Fragment(), OnMapReadyCallback {
     private val viewModel: RoadStatusViewModel by viewModels()
-    private var map: GoogleMap? = null
+    private var gMap: GoogleMap? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_road_status)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_road_status, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupMap()
         setupObservers()
         setupListeners()
     }
 
     private fun setupMap() {
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        map.onCreate(null)
+        map.onResume()
+        map.getMapAsync(this)
     }
 
     override fun onMapReady(gmap: GoogleMap) {
-        map = gmap
+        gMap = gmap
         setupMapToInitialPosition()
     }
 
     private fun setupListeners() {
-        findRoadName.addTextChangedListener {
-            viewModel.onTextChanged(it.toString())
-        }
+        findRoadName.addTextChangedListener { viewModel.onTextChanged(it.toString()) }
 
         findRoadName.setOnEditorActionListener { _, actionId, event ->
             if ((event != null && event.keyCode == KeyEvent.KEYCODE_ENTER) ||
@@ -62,8 +63,9 @@ class RoadStatusActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         fetchButton.setOnClickListener {
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+
+            val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(requireView().windowToken, 0)
 
             val roadName = findRoadName.text.toString()
             if (roadName.isNotEmpty()) {
@@ -73,7 +75,7 @@ class RoadStatusActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setupObservers() {
-        viewModel.viewState.observe(this, { handleViewState(it) })
+        viewModel.viewState.observe(requireActivity(), { handleViewState(it) })
     }
 
     private fun handleViewState(viewState: RoadStatusViewModel.ViewState) {
@@ -108,14 +110,21 @@ class RoadStatusActivity : AppCompatActivity(), OnMapReadyCallback {
             latLongBuilder.include(LatLng(it.lat, it.long))
         }
         val newBounds = latLongBuilder.build()
-        map?.animateCamera(CameraUpdateFactory.newLatLngBounds(newBounds, 0))
+        gMap?.animateCamera(CameraUpdateFactory.newLatLngBounds(newBounds, 0))
     }
 
     private fun setupMapToInitialPosition() {
         val london = LatLng(DEFAULT_LAT, DEFAULT_LNG)
-        map?.let { map ->
+        gMap?.let { map ->
             map.setMinZoomPreference(10f)
             map.animateCamera(CameraUpdateFactory.newLatLng(london))
         }
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = RoadStatusFragment()
+
+        val TAG: String = RoadStatusFragment::class.java.name
     }
 }

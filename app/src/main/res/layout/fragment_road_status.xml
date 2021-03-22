@@ -5,39 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
-    tools:context=".view.RoadStatusActivity">
+    tools:context=".view.MainActivity">
 
     <EditText
         android:id="@+id/findRoadName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:maxLines="1"
+        android:hint="@string/enter_a_road_name"
         android:inputType="text"
+        android:maxLines="1"
         app:layout_constraintEnd_toStartOf="@+id/fetchButton"
-        android:hint="@string/enter_a_road_name"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/fetchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/get_status"
         android:layout_marginStart="@dimen/margin_8"
         android:layout_marginLeft="@dimen/margin_8"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/get_status"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/findRoadName"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressIndicator"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_16"
-        app:layout_constraintStart_toStartOf="parent"
+        android:indeterminate="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/findRoadName"
-        android:indeterminate="true"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/findRoadName" />
 
     <TextView
         android:id="@+id/roadName"
@@ -45,9 +45,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_16"
         android:textSize="@dimen/text_size_16"
-        app:layout_constraintTop_toBottomOf="@+id/findRoadName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/findRoadName" />
 
     <TextView
         android:id="@+id/roadSeverity"
@@ -55,9 +55,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_8"
         android:textSize="@dimen/text_size_16"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roadName"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roadName" />
 
     <TextView
         android:id="@+id/severityDescription"
@@ -65,30 +65,29 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_8"
         android:textSize="@dimen/text_size_16"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roadSeverity"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roadSeverity" />
 
     <TextView
         android:id="@+id/errorDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_16"
-        android:textSize="@dimen/text_size_24"
         android:textColor="@android:color/holo_red_light"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="@dimen/text_size_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/findRoadName"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/findRoadName" />
 
-    <fragment
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <com.google.android.gms.maps.MapView
         android:id="@+id/map"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_16"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/severityDescription"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/severityDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

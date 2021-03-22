@@ -28,7 +28,7 @@
             android:value="AIzaSyDZOPm8mgEQ2DScJIlZRPhKSQVFETmjQCs" />
 
         <activity
-            android:name=".view.RoadStatusActivity"
+            android:name=".view.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
